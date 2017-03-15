@@ -1,0 +1,21 @@
+example_section:
+    server: localhost
+    port: 12345
+    data: '[test data]'
+    facility: user
+    hostname: senderhost.example.com
+    tls: true
+    verify: true
+
+    cert: |
+        -----BEGIN CERTIFICATE-----
+        -----END CERTIFICATE-----
+
+    key: |
+        -----BEGIN RSA PRIVATE KEY-----
+        -----END RSA PRIVATE KEY-----
+
+    ca: |
+        -----BEGIN CERTIFICATE-----
+        -----END CERTIFICATE-----
+
