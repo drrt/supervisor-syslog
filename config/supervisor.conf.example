@@ -1,0 +1,7 @@
+[eventlistener:supervisor_syslog]
+command=supervisor_syslog --server localhost --port 12345 --hostname foobob_two --config config.yaml --yaml example_section
+
+buffer_size=300
+events=PROCESS_LOG
+
+stdout_logfile=/dev/null
