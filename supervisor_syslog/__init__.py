@@ -196,7 +196,7 @@ def msg_rfc5424(priority, hostname, data, payload):
     return msg
 
 
-def main():
+def handler():
     parser = argparse.ArgumentParser()
     args = parse_commandline(parser)
 
@@ -251,7 +251,4 @@ def main():
         else:
             event_ok(sys.stdout)
 
-
-if __name__ == '__main__':
-    main()
 
