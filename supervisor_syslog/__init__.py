@@ -189,7 +189,7 @@ def msg_bsd(priority, hostname, payload):
 def msg_rfc5424(priority, hostname, data, payload):
     # craft a rfc5424 complaint syslog message
     fmt = '<{}>1 {} {} {} {} {} {} {}'
-    data = data if data else '-'
+    data = '[{}]'.format(data) if data else '-'
     time_date = str(datetime.datetime.utcnow()).replace(' ', 'T', 1) + '-00:00'
     msg = fmt.format(priority, time_date, hostname, payload.get('processname'),
                      payload.get('pid'), payload.get('serial'), data, payload.get('msg'))
@@ -248,6 +248,9 @@ def handler():
         except Exception as err:
             event_fail(sys.stdout)
             write_stderr(repr(err) + '\n')
+            ssl_socket.close()
+            ssl_socket = syslog_socket(address=(args.server, args.port), tls=args.tls,
+                                       ca_certs=args.ca, keyfile=args.key, certfile=args.cert)
         else:
             event_ok(sys.stdout)
 
