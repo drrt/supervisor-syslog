@@ -7,6 +7,7 @@ import socket
 import ssl
 import yaml
 import tempfile
+import time
 import datetime
 
 priority_names = {
@@ -180,7 +181,7 @@ def create_priority(eventname, facility):
 def msg_bsd(priority, hostname, payload):
     # craft a rfc3164 (BSD) style syslog message
     fmt = '<{}>{} {} {}: {}'
-    time_date = datetime.datetime.now().strftime('%b %e %H:%M:%S')
+    time_date = datetime.datetime.utcnow().strftime('%b %e %H:%M:%S')
     msg = fmt.format(priority, time_date, hostname,
                      payload.get('processname'), payload.get('msg'))
     return msg
@@ -190,10 +191,25 @@ def msg_rfc5424(priority, hostname, data, payload):
     # craft a rfc5424 complaint syslog message
     fmt = '<{}>1 {} {} {} {} {} {} {}'
     data = '[{}]'.format(data) if data else '-'
-    time_date = str(datetime.datetime.utcnow()).replace(' ', 'T', 1) + '-00:00'
+    time_date = datetime.datetime.utcnow().isoformat() + '+00:00'
     msg = fmt.format(priority, time_date, hostname, payload.get('processname'),
                      payload.get('pid'), payload.get('serial'), data, payload.get('msg'))
     return msg
+
+
+def ssl_connect(args):
+    while True:
+        try:
+            ssl_socket = syslog_socket(address=(args.server, args.port), tls=args.tls,
+                                  ca_certs=args.ca, keyfile=args.key, certfile=args.cert)
+        except Exception as err:
+            write_stderr(repr(err)  + '\n')
+            time.sleep(2)
+        else:
+            write_stderr('connected to {}:{}\n'.format(args.server, args.port))
+            break
+
+    return ssl_socket
 
 
 def handler():
@@ -217,11 +233,7 @@ def handler():
     except Exception as err:
         sys.exit(repr(err))
 
-    try:
-        ssl_socket = syslog_socket(address=(args.server, args.port), tls=args.tls,
-                                  ca_certs=args.ca, keyfile=args.key, certfile=args.cert)
-    except Exception as err:
-        sys.exit(repr(err))
+    ssl_socket = ssl_connect(args)
 
     # pick a hostname to include in the syslog messages
     hostname = args.hostname if args.hostname else socket.gethostname()
@@ -248,9 +260,7 @@ def handler():
         except Exception as err:
             event_fail(sys.stdout)
             write_stderr(repr(err) + '\n')
-            ssl_socket.close()
-            ssl_socket = syslog_socket(address=(args.server, args.port), tls=args.tls,
-                                       ca_certs=args.ca, keyfile=args.key, certfile=args.cert)
+            ssl_socket = ssl_connect(args)
         else:
             event_ok(sys.stdout)
 
