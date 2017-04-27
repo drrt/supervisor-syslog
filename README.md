@@ -85,6 +85,11 @@ logging:
         -----END CERTIFICATE-----
 ```
 
+### Requirements
+
+* python >= 2.7.6 and < 3.0
+* PyYAML >= 3.0
+
 ### Message format caveats
 
 * Messages to stdout will always be priority `info`, messages to stderr will always be priority `error`
