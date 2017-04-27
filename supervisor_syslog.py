@@ -121,7 +121,10 @@ def config_file(args, config):
 
 def config_check(args):
     if not args.server:
-        raise ValueError('argument --server is required')
+        if not args.config:
+            raise ValueError('argument --server is required')
+        else:
+            raise ValueError('config option "server" is required')
 
     if args.cert or args.ca:
         args.tls = True

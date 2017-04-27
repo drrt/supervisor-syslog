@@ -44,6 +44,7 @@ def plain_server(request):
     yield s.getsockname()
 
 def _s_connect(addr, c):
+    print(c)
     __tracebackhide__ = True
     ca = 'tls/' + c[0] if c[0] else None
     cert = 'tls/' + c[1] if c[1] else None 
@@ -84,12 +85,12 @@ def test_badca_nocerts(tls_server):
         _s_connect(tls_server, c)
 
 def test_noca_badcert(tls_server):
-    c = [ None,  'bad_client.cert', None, True ]
+    c = [ None, 'bad_client.cert', None, True ]
     with pytest.raises(ssl.SSLError) as err:
         _s_connect(tls_server, c)
 
 def test_noca_badkey(tls_server):
-    c = [ None, None,  'bad_client.key', True ]
+    c = [ None, None, 'bad_client.key', True ]
     with pytest.raises(ssl.SSLError) as err:
         _s_connect(tls_server, c)
 

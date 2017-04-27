@@ -42,7 +42,7 @@ def test_msg_bsd():
     assert re.match(g, r)
 
 def test_msg_rfc5424():
-    g = '<14>1 [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]T[0-9][0-9]:[0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9]:[0-9][0-9] testhost foo 123 21 \[foo=bar\] adfasdfasdf adsdfasdf'
-    d = '[foo=bar]'
+    g = '<14>1 [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]T[0-9][0-9]:[0-9][0-9]:[0-9][0-9].[0-9][0-9][0-9][0-9][0-9][0-9]\+[0-9][0-9]:[0-9][0-9] testhost foo 123 21 \[foo=bar\] adfasdfasdf adsdfasdf'
+    d = 'foo=bar'
     r = supervisor_syslog.msg_rfc5424(14, 'testhost', d, payload_good)
     assert re.match(g, r)
