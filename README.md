@@ -1,7 +1,7 @@
 # supervisor-syslog
 
 ### What is it?
-A supervisord event listener for remote syslogging
+A supervisord event listener for remote syslogging. It will listen to all of your \[program\] output and ship the results to a syslog server of your choice, bypassing all local syslog infrastructure.
 
 ### Why would you use this over `stdout_logfile=syslog`
 
