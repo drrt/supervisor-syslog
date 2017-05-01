@@ -37,7 +37,7 @@ def test_create_priority_2():
     assert r == 131
 
 def test_msg_bsd():
-    g = '<14>[A-Z][a-z][a-z] [0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9] testhost foo: adfasdfasdf adsdfasdf'
+    g = '<14>[A-Z][a-z][a-z][ ]+[0-9]+ [0-9][0-9]:[0-9][0-9]:[0-9][0-9] testhost foo: adfasdfasdf adsdfasdf'
     r = supervisor_syslog.msg_bsd(14, 'testhost', payload_good)
     assert re.match(g, r)
 
